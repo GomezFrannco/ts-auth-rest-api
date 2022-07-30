@@ -1,7 +1,7 @@
 {
   "name": "ts-auth-rest-api",
   "version": "1.0.0",
-  "description": "",
+  "description": "A REST API for user authentication. With this API users can receive a verification code by email, reset their password, etc.",
   "main": "index.js",
   "scripts": {
     "dev": "npx ts-node-dev --respawn src/app.ts"
