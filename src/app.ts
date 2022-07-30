@@ -2,6 +2,7 @@ require("dotenv").config()
 import express, { Application } from "express";
 import config from "config";
 import connect from "./utils/mongoose.utils";
+import router from './routes'
 
 export class App {
   private app: Application;
@@ -21,6 +22,7 @@ export class App {
     this.app.use(express.json());
   }
   private routes(): void {
+    this.app.use(router)
   }
   private connection(): Promise<void> {
     return connect();
