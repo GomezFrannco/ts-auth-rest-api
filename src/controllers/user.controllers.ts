@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
-import { createUser, findUserById } from "../services/user.services";
-import { CreateUserInput, VerifyUserInput } from "../types/api.types";
+import { nanoid } from "nanoid";
+import { createUser, findUserByEmail, findUserById } from "../services/user.services";
+import { CreateUserInput, ForgotPasswordInput, VerifyUserInput } from "../types/api.types";
 import sendEmail from "../utils/mailer.utils";
 
 export async function createUserHandler(req: Request<{}, {}, CreateUserInput>, res: Response) {
@@ -43,4 +44,29 @@ export async function verifyUserHandler(req: Request<VerifyUserInput>, res: Resp
     return res.status(500).send(e)
   }
 
+}
+
+export async function forgotPasswordHandler(req: Request<{},{}, ForgotPasswordInput>, res: Response) {
+  const { email } = req.body;
+  try {
+    const user = await findUserByEmail(email);
+    if(!user) {
+      return res.send('No user registered with that email');
+    }
+    if(!user.verified) {
+      return res.send('User is not verified');
+    }
+    const passwordResetCode = nanoid();
+    user.passwordResetCode = passwordResetCode;
+    await user.save();
+    await sendEmail({
+      from: 'test@example.com',
+      to: user.email,
+      subject: 'Reset your password',
+      text: `Here is your password reset code: ${passwordResetCode}\n ID: ${user._id}`, 
+    })
+    return res.status(200).send('Email was sent successfully. Please check your email inbox')
+  } catch (e) {
+    return res.status(500).send(e)
+  }
 }
