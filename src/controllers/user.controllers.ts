@@ -21,3 +21,26 @@ export async function createUserHandler(req: Request<{}, {}, CreateUserInput>, r
     return res.status(500).send(e)
   }
 }
+
+export async function verifyUserHandler(req: Request<VerifyUserInput>, res: Response) {
+  const id = req.params.id;
+  const verificationCode = req.params.verificationCode;
+  try {
+    const user = await findUserById(id);
+    if (!user) {
+      return res.status(404).send('Could not found a user to verify!');
+    }
+    if(user.verified) {
+      return res.status(200).send('User already verified!');
+    }
+    if(user.verificationCode === verificationCode) {
+      user.verified = true;
+      await user.save();
+      return res.status(201).send('User verified!');
+    }
+    return res.status(500).send('Could not verify user')
+  } catch (e: any) {
+    return res.status(500).send(e)
+  }
+
+}
