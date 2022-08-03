@@ -10,10 +10,10 @@ export class App {
   constructor() {
     this.app = express();
     this.port = config.get('port',);
+    this.connection();
     this.settings();
     this.middlewares();
     this.routes();
-    this.connection();
   }
   private settings(): void {
     this.app.set("port", this.port);
