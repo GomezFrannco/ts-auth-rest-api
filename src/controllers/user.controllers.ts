@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
-import { createUser } from "../services/user.services";
-import { CreateUserInput } from "../types/api.types";
+import { createUser, findUserById } from "../services/user.services";
+import { CreateUserInput, VerifyUserInput } from "../types/api.types";
 import sendEmail from "../utils/mailer.utils";
 
 export async function createUserHandler(req: Request<{}, {}, CreateUserInput>, res: Response) {
@@ -13,7 +13,7 @@ export async function createUserHandler(req: Request<{}, {}, CreateUserInput>, r
       subject: 'Verify your account',
       text: `Here is your verification code: ${user.verificationCode}\n ID: ${user._id}` 
     });
-    return res.send("User created successfully!");
+    return res.status(201).send("User created successfully!");
   } catch (e: any) {
     if (e.code == 11000) {
       return res.status(409).send("Account already exists!");
