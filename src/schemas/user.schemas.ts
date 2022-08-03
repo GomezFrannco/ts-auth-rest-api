@@ -10,7 +10,7 @@ export const createUserSchema = object({
     }),
     password: string({
       required_error: "Password is required",
-    }).min(6, "Password too short - min 6 characters"),
+    }).min(6, "Password too short | min 6 characters"),
     passwordConfirmation: string({
       required_error: "Password confirmation is required",
     }),
@@ -20,5 +20,12 @@ export const createUserSchema = object({
   }).refine((data) => data.password === data.passwordConfirmation, {
     message: "Passwords must be equals",
     path: ["passwordConfirmation"],
+  }),
+});
+
+export const verifyUserSchema = object({
+  params: object({
+    id: string(),
+    verificationCode: string(),
   }),
 });
