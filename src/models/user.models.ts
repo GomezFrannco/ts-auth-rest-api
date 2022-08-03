@@ -3,7 +3,7 @@ import { nanoid } from "nanoid";
 import argon2 from 'argon2';
 
 @pre<User>("save", async function() {
-  if (!this.isModified('Password')) {
+  if (!this.isModified('password')) {
     return;
   }
 
