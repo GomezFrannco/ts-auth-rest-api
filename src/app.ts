@@ -3,6 +3,7 @@ import express, { Application } from "express";
 import config from "config";
 import connect from "./utils/mongoose.utils";
 import router from './routes'
+import deserializeUser from "./middlewares/deserialize.middlewares";
 
 export class App {
   private app: Application;
@@ -20,6 +21,7 @@ export class App {
   }
   private middlewares(): void {
     this.app.use(express.json());
+    this.app.use(deserializeUser)
   }
   private routes(): void {
     this.app.use(router)
