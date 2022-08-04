@@ -36,4 +36,22 @@ export const forgotPasswordSchema = object({
       required_error: "Email is required"
     }).email("Not a valid email address"),
   })
-})
+});
+
+export const resetPasswordSchema = object({
+  params: object({
+    id: string(),
+    passwordResetCode: string(),
+  }),
+  body: object({
+    password: string({
+      required_error: "Password is required",
+    }).min(6, "Password too short | min 6 characters"),
+    passwordConfirmation: string({
+      required_error: "Password confirmation is required",
+    }),
+  }).refine((data) => data.password === data.passwordConfirmation, {
+    message: "Passwords must be equals",
+    path: ["passwordConfirmation"],
+  }),
+});
