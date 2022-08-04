@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { nanoid } from "nanoid";
 import { createUser, findUserByEmail, findUserById } from "../services/user.services";
-import { CreateUserInput, ForgotPasswordInput, VerifyUserInput } from "../types/api.types";
+import { CreateUserInput, ForgotPasswordInput, ResetPasswordInput, VerifyUserInput } from "../types/api.types";
 import sendEmail from "../utils/mailer.utils";
 
 export async function createUserHandler(req: Request<{}, {}, CreateUserInput>, res: Response) {
@@ -66,6 +66,23 @@ export async function forgotPasswordHandler(req: Request<{},{}, ForgotPasswordIn
       text: `Here is your password reset code: ${passwordResetCode}\n ID: ${user._id}`, 
     })
     return res.status(200).send('Email was sent successfully. Please check your email inbox')
+  } catch (e) {
+    return res.status(500).send(e)
+  }
+}
+
+export async function resetPasswordHandler(req: Request<ResetPasswordInput["params"], {}, ResetPasswordInput["body"]>, res: Response) {
+  const { id, passwordResetCode } = req.params;
+  const { password } = req.body;
+  try {
+    const user = await findUserById(id);
+    if(!user || !user.passwordResetCode || user.passwordResetCode !== passwordResetCode) {
+      return res.status(400).send('Could not reset user password')
+    } 
+      user.passwordResetCode = null;
+      user.password = password;
+      await user.save();
+    return res.status(200).send('succesfully updated password');
   } catch (e) {
     return res.status(500).send(e)
   }
