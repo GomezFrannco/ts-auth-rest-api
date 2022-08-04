@@ -87,3 +87,7 @@ export async function resetPasswordHandler(req: Request<ResetPasswordInput["para
     return res.status(500).send(e)
   }
 }
+
+export async function getCurrentUserHandler(req: Request, res: Response) {
+  return res.status(200).send(res.locals.user);
+}
