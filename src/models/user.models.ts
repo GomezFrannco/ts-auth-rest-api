@@ -2,6 +2,14 @@ import { getModelForClass, modelOptions, prop, Severity, pre, DocumentType, inde
 import { nanoid } from "nanoid";
 import argon2 from 'argon2';
 
+export const privateFields = [
+  "password",
+  "__v",
+  "passwordResetCode",
+  "verificationCode",
+  "verified",
+]
+
 @pre<User>("save", async function() {
   if (!this.isModified('password')) {
     return;
