@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { createUserHandler, forgotPasswordHandler, resetPasswordHandler, verifyUserHandler } from "../controllers/user.controllers";
+import { createUserHandler, forgotPasswordHandler, getCurrentUserHandler, resetPasswordHandler, verifyUserHandler } from "../controllers/user.controllers";
 import validateResource from "../middlewares/validate.middlewares";
 import { createUserSchema, forgotPasswordSchema, resetPasswordSchema, verifyUserSchema } from "../schemas/user.schemas";
 
@@ -12,5 +12,7 @@ router.post("/api/users/verify/:id/:verificationCode", validateResource(verifyUs
 router.post("/api/users/forgotpassword",  validateResource(forgotPasswordSchema), forgotPasswordHandler);
 
 router.post("/api/users/resetpassword/:id/:passwordResetCode", validateResource(resetPasswordSchema), resetPasswordHandler);
+
+router.get("/api/users/me", getCurrentUserHandler);
 
 export default router;
