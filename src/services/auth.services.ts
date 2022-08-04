@@ -29,3 +29,7 @@ export function signAccessToken(user: DocumentType<User>) {
   });
   return accessToken;
 }
+
+export function findSessionById(id: string) {
+  return SessionModel.findById(id);
+}
