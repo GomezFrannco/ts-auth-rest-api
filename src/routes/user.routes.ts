@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { createUserHandler, forgotPasswordHandler, getCurrentUserHandler, resetPasswordHandler, verifyUserHandler } from "../controllers/user.controllers";
+import requireUser from "../middlewares/require.middlewares";
 import validateResource from "../middlewares/validate.middlewares";
 import { createUserSchema, forgotPasswordSchema, resetPasswordSchema, verifyUserSchema } from "../schemas/user.schemas";
 
@@ -13,6 +14,6 @@ router.post("/api/users/forgotpassword",  validateResource(forgotPasswordSchema)
 
 router.post("/api/users/resetpassword/:id/:passwordResetCode", validateResource(resetPasswordSchema), resetPasswordHandler);
 
-router.get("/api/users/me", getCurrentUserHandler);
+router.get("/api/users/me", requireUser ,getCurrentUserHandler);
 
 export default router;
